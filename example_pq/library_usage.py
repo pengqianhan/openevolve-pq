@@ -1,6 +1,12 @@
 import os
+from pathlib import Path
 from openevolve import run_evolution, evolve_function
 from openevolve.config import Config, LLMModelConfig
+
+# 获取当前文件所在目录，构建跨平台兼容的输出路径
+SCRIPT_DIR = Path(__file__).parent.resolve()
+OUTPUT_DIR = SCRIPT_DIR / "result"
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # 配置使用本地 LLM
 api_key = os.getenv('HASEL_API_KEY')
@@ -76,6 +82,7 @@ result = evolve_function(
     bubble_sort,
     test_cases=[([3,1,2], [1,2,3]), ([5,2,8], [2,5,8])],
     iterations=5,  # 减少迭代次数用于测试
-    config=config
+    config=config,
+    output_dir=str(OUTPUT_DIR)  # 保存结果到 example_pq/result 目录
 )
 print(f"Evolved sorting algorithm: {result.best_code}")
